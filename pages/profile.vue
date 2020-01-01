@@ -6,11 +6,11 @@
       <div class="content">
         <p>
           <strong>Username:</strong>
-          {{ username }}
+          {{ user.userName }}
         </p>
         <p>
           <strong>Email:</strong>
-          {{ email }}
+          {{ user.email }}
         </p>
       </div>
     </div>
@@ -19,16 +19,17 @@
 
 <script>
     import { mapGetters } from 'vuex';
+    import { storeUser } from '../store/user'
     export default {
         middleware: 'auth',
-        data: function () {
-            return {
-                username: localStorage.getItem('username'),
-                email:localStorage.getItem('email')
-            }
-        },
+
         computed: {
             ...mapGetters(['loggedInUser']),
+           user(){
+               console.log('usuario' + storeUser.state.user.userName)
+               return storeUser.state.user;
+           },
+
         },
     };
 </script>

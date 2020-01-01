@@ -53,7 +53,7 @@
 
 <script>
     import Notification from '~/components/Notification';
-
+    import { storeUser } from '../store/user'
     export default {
         middleware: 'guest',
         components: {
@@ -64,24 +64,22 @@
                 userName: '',
                 password: '',
                 error: null,
-            };
+            }
         },
         methods: {
-             login() {
+            login: function () {
                 try {
                     this.$auth.loginWith('local', {
                         data: {
                             userName: this.userName,
                             password: this.password,
                         },
-                    }).then(() =>{
+                    }).then(() => {
                         console.log('hola');
 
-                        this.$axios.post('/user',{userName: this.userName}).then(function (response){
+                        this.$axios.post('/user', {userName: this.userName}).then(function (response) {
                             console.log(response.data);
-                           localStorage.setItem('username',response.data.userName);
-                            localStorage.setItem('email',response.data.email);
-
+                            storeUser.commit('setUser',response.data)
 
                         })
 

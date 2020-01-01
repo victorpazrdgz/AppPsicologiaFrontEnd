@@ -17,7 +17,7 @@
                   type="text"
                   class="input"
                   name="username"
-                  v-model="username"
+                  v-model="userName"
                   required
                 >
               </div>
@@ -50,7 +50,19 @@
                 >
               </div>
             </div>
+            <div class="field">
+              <label class="label">Sex</label>
 
+              <div class="control">
+                <select v-model="sex">
+                  <option disabled value="">Choose an Option</option>
+                  <option>Male</option>
+                  <option>Female</option>
+                  <option>Other</option>
+                </select>
+
+              </div>
+            </div>
             <div class="control">
               <button type="submit" class="button is-dark is-fullwidth">Register</button>
             </div>
@@ -74,26 +86,24 @@
         },
         data() {
             return {
-                username: '',
+                userName: '',
                 email: '',
                 password: '',
+                confirmPassword:'',
+                sex:"",
                 error: null,
             };
         },
         methods: {
             async register() {
                 try {
-                    await this.$axios.post('register', {
-                        username: this.username,
+                    await this.$axios.post('/user/new', {
+                        userName: this.userName,
                         email: this.email,
                         password: this.password,
+                        sex:this.sex
                     });
-                    await this.$auth.loginWith('local', {
-                        data: {
-                            email: this.email,
-                            password: this.password,
-                        },
-                    });
+
                     this.$router.push('/');
                 } catch (e) {
                     this.error = e.response.data.message;
