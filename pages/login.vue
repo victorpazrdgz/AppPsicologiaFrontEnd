@@ -53,7 +53,7 @@
 
 <script>
     import Notification from '~/components/Notification';
-    import { storeUser } from '../store/user'
+    import { store } from '../store/user'
     export default {
         middleware: 'guest',
         components: {
@@ -75,19 +75,18 @@
                             password: this.password,
                         },
                     }).then(() => {
-                        console.log('hola');
-
                         this.$axios.post('/user', {userName: this.userName}).then(function (response) {
-                            console.log(response.data);
-                            storeUser.commit('setUser',response.data)
 
-                        })
+                            store.commit('setUser',response.data)
 
-                        ;
-                        this.$router.push('/');
-
+                            if (response.data.role=='USER') {
+                                $nuxt.$router.push('/');
+                            }
+                              else {
+                                $nuxt.$router.push( {name: 'admin' });
+                            }
+                        });
                     })
-
                 } catch (e) {
                     this.error = e.response.data.message;
                 }

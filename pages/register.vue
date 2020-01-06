@@ -54,11 +54,11 @@
               <label class="label">Sex</label>
 
               <div class="control">
-                <select v-model="sex">
-                  <option disabled value="">Choose an Option</option>
-                  <option>Male</option>
-                  <option>Female</option>
-                  <option>Other</option>
+                <select class="select" v-model="sex">
+                  <option class="label" disabled value="">Choose an Option</option>
+                  <option class="label">Male</option>
+                  <option class="label">Female</option>
+                  <option class="label">Other</option>
                 </select>
 
               </div>

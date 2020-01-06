@@ -19,15 +19,14 @@
 
 <script>
     import { mapGetters } from 'vuex';
-    import { storeUser } from '../store/user'
+    import { store } from '../store/user'
     export default {
         middleware: 'auth',
 
         computed: {
-            ...mapGetters(['loggedInUser']),
+            ...mapGetters(['loggedInUser','user']),
            user(){
-               console.log('usuario' + storeUser.state.user.userName)
-               return storeUser.state.user;
+               return store.state.user;
            },
 
         },

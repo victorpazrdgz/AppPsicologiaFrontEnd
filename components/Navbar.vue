@@ -15,7 +15,7 @@
         <div class="navbar-end">
           <div class="navbar-item has-dropdown is-hoverable" v-if="isAuthenticated">
             <a class="navbar-link">
-              {{ loggedInUser.username }}
+              {{ user.userName }}
             </a>
             <div class="navbar-dropdown">
               <nuxt-link class="navbar-item" to="/profile">My Profile</nuxt-link>
@@ -35,9 +35,13 @@
 
 <script>
     import { mapGetters } from 'vuex';
+    import { store } from '../store/user'
     export default {
         computed: {
-            ...mapGetters(['isAuthenticated', 'loggedInUser']),
+            ...mapGetters(['isAuthenticated']),
+            user(){
+                return store.state.user;
+            },
         },
         methods: {
             async logout() {
