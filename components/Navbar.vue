@@ -1,17 +1,15 @@
 <template>
-  <nav class="navbar is-light">
-    <div class="container">
+  <nav class="navbar is-light"  role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
         <nuxt-link class="navbar-item" to="/">App Psicologia</nuxt-link>
 
-        <button class="button navbar-burger">
+        <button  class="button navbar-burger" onclick="document.querySelector('.navbar-menu').classList.toggle('is-active');">
           <span></span>
           <span></span>
           <span></span>
         </button>
       </div>
-
-      <div class="navbar-menu">
+      <div  class="navbar-menu"  >
         <div class="navbar-end">
           <div class="navbar-item has-dropdown is-hoverable" v-if="isAuthenticated">
             <a class="navbar-link">
@@ -29,14 +27,16 @@
           </template>
         </div>
       </div>
-    </div>
+
   </nav>
+
 </template>
 
 <script>
     import { mapGetters } from 'vuex';
     import { store } from '../store/user'
     export default {
+
         computed: {
             ...mapGetters(['isAuthenticated']),
             user(){
@@ -47,7 +47,20 @@
             async logout() {
                 await this.$auth.logout();
             },
+
         },
     };
 </script>
 
+<!--
+<style>
+  @media screen and (min-width: 1025px) {
+    .navbar-item.is-hoverable:hover .navbar-dropdown {
+      display: block !important;
+    }
+    .navbar-item.is-hoverable:focus-within .navbar-dropdown {
+      display: none;
+    }
+  }
+</style>
+-->
