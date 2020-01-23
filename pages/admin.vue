@@ -48,7 +48,18 @@
 <script>
     import ModalForm from "../components/ModalForm";
     import Vue from 'vue';
+    import { mapGetters } from 'vuex';
+    import { store } from '../store/user'
     export default {
+      // middleware: 'auth-admin',
+        // auth:{roles:{only:{"admin":user.role}}},
+        // computed: {
+        //     ...mapGetters(['loggedInUser','user']),
+        //    user(){
+        //        return store.state.user;
+        //    },
+
+        // },
         name: "admin",
         components: {ModalForm},
         data: () => ({
