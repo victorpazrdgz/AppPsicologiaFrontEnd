@@ -5,6 +5,7 @@
       <h2>Dynamically inserted:</h2>
 
       <button @click="newTest">New Test</button>
+   
       <modaltemplate v-if="isModalVisible" :is="isModalVisible" ref="my-modal" @save="saveModal" @close="exitModal">
         <h2 slot="header" style="text-align: center">Create Question</h2>
         <div slot="body">
@@ -49,7 +50,8 @@
     import ModalForm from "../components/ModalForm";
     import Vue from 'vue';
     import { mapGetters } from 'vuex';
-    import { store } from '../store/user'
+    // import { store } from '../store/user';
+    import { store } from '../store/question';
     export default {
       // middleware: 'auth-admin',
         // auth:{roles:{only:{"admin":user.role}}},
@@ -69,6 +71,7 @@
             numberOptions: 2,
             numberOptionsRender:2,
             questionOptions:[],
+            listOption: []
         }),
 
        methods: {
@@ -76,17 +79,20 @@
                this.isModalVisible = () => import("../components/ModalForm");
            },
            saveModal(){
+              let questionJson=null;
                console.log(this.question);
                console.log(this.typeQuestion);
                for(var i=1; i<=this.numberOptions;i++){
+                 this.listOption.push({'option{i}':this.questionOptions[i]});
                   console.log(this.questionOptions[i])
                }
+              questionJson={question: this.question, typeQuestion: this.typeQuestion,options:this.listOption}
+               console.log('json'+questionJson.question)
+               store.commit('setQuestion',{question: this.question, typeQuestion: this.typeQuestion,options:this.listOption})
                this.isModalVisible = false;
            },
            exitModal() {
-
                    this.isModalVisible= false
-
            },
            forceRerender() {
                if (this.numberOptions!=this.numberOptionsRender){
@@ -98,8 +104,8 @@
               }
            }  
 
-       }
-
+       },
+        
     }
 </script>
 
