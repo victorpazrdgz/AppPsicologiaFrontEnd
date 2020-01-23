@@ -78,6 +78,9 @@
            saveModal(){
                console.log(this.question);
                console.log(this.typeQuestion);
+               for(var i=1; i<=this.numberOptions;i++){
+                  console.log(this.questionOptions[i])
+               }
                this.isModalVisible = false;
            },
            exitModal() {
@@ -86,12 +89,14 @@
 
            },
            forceRerender() {
+               if (this.numberOptions!=this.numberOptionsRender){
                if (this.numberOptions>this.numberOptionsRender)
                 this.numberOptionsRender++;
                else
                    this.numberOptionsRender--;
                this.$forceUpdate();
-           }
+              }
+           }  
 
        }
 
