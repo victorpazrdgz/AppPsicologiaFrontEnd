@@ -24,15 +24,15 @@
               </select>
             </div>
           </div>
-          <div class="field" v-if="this.typeQuestion==='Options'" :key="numberOptions">
+          <div class="field" v-if="this.typeQuestion==='Options'" :key="numberOptions" @change="forceRerender">
             <label class="label">Number Options</label>
             <div class="control">
-              <input type="number" v-model="numberOptions" :min="2" :max="10" inline controls @click="forceRerender"></input>
+              <input type="number" v-model="numberOptions" :min="2" :max="10" inline controls />
             </div>
             <label class="label">Question Options</label>
             <div class="control" v-for='(n,index) in this.numberOptionsRender'>
               {{ n }}
-              <input type="text" v-model="questionOptions[index]" >
+              <input type="text" v-model="questionOptions[n]" >
             </div>
           </div>
 
@@ -58,7 +58,6 @@
             numberOptions: 2,
             numberOptionsRender:2,
             questionOptions:[],
-            n:1,
         }),
 
        methods: {
@@ -80,6 +79,7 @@
                 this.numberOptionsRender++;
                else
                    this.numberOptionsRender--;
+               this.$forceUpdate();
            }
 
        }
