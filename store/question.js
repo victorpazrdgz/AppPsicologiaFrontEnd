@@ -5,7 +5,7 @@ import SecureLS from "secure-ls";
 var ls = new SecureLS({ isCompression: false });
 Vue.use(Vuex);
 export const store = new Vuex.Store({
-  state:{ question:{}
+  state:{ questionJson:[]
   },
   mutations: {
     setQuestion(state, question) {
