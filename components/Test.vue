@@ -3,18 +3,37 @@
     <div class="container">
       <p>Hola admin </p>
       <h2>Dynamically test Created:</h2>
+
+      <div v-show="!isTestHaveName" >
+        <h2 style="text-align: center">Create Test</h2>
+
+          <div class="field">
+            <label class="label">Test Name</label>
+            <div class="control">
+              <input type="text" placeholder="Test Name" v-model="testName" style="width: 100%"/>
+
+            </div>
+            <button  @click="newQuestion">OK</button>
+            <button  @click="exitTest">Cancel</button>
+          </div>
+
+
+      </div>
+
       <div v-for='(item,index) in this.questionJson'>
         {{item.questionTitle}}
         <div v-if="item.questionType === 'Text'">
           <textarea></textarea>
         </div>
-        <div v-if="item.questionType === 'Options'" v-for="item1 in item.options" >
+        <div v-if="item.questionType === 'Options'" v-for="item1 in item.options">
 
-            <input type="radio"> {{item1.option}}
+          <input type="radio"> {{item1.option}}
 
         </div>
       </div>
-      <button @click="newQuestion">Add question</button>
+
+      <button  v-show="isTestHaveName" @click="newQuestion">Add question</button>
+
       <modaltemplate v-if="isModalVisible" :is="isModalVisible" ref="my-modal" @save="saveModal" @close="exitModal">
         <h2 slot="header" style="text-align: center">Create Question</h2>
         <div slot="body">
@@ -62,22 +81,24 @@
 </template>
 
 <script>
-    import { store } from '../store/question';
+    import {store} from '../store/question';
+    import Bus from '~/assets/bus'
 
     export default {
         name: "Test",
         data: () => ({
-            isModalVisible : null,
-            idQuestion:1,
-            questionTitle:null,
-            questionType:null,
+            isModalVisible: null,
+            idQuestion: 1,
+            questionTitle: null,
+            questionType: null,
             numberOptions: 2,
-            numberOptionsRender:2,
-            questionOptions:[],
+            numberOptionsRender: 2,
+            questionOptions: [],
             listOption: [],
-            questionJson:[],
-            testName: 'nombreTest',
-            option:null
+            questionJson: [],
+            testName: null,
+            isTestHaveName: null,
+            option: null
         }),
         // computed: {
         //     ...mapGetters(['question']),
@@ -87,10 +108,11 @@
         // },
         methods: {
             async newQuestion() {
-                console.log("json"+this.questionJson.length)
+                console.log("json" + this.questionJson.length)
+                this.isTestHaveName = true;
                 this.isModalVisible = () => import("../components/ModalForm");
             },
-            saveModal(){
+            saveModal() {
 
                 console.log(this.questionTitle);
 
@@ -103,7 +125,7 @@
                     });
                 else {
                     for (var i = 1; i <= this.numberOptions; i++) {
-                          this.listOption.push({"option": this.questionOptions[i]});
+                        this.listOption.push({"option": this.questionOptions[i]});
                         console.log(this.questionOptions[i])
                     }
                     for (var i = 0; i <= this.listOption.length; i++) {
@@ -118,45 +140,55 @@
                     });
                 }
                 console.log('json' + this.questionJson[0].questionTitle)
-                store.commit('setQuestion',{"id":this.idQuestion,questionTitle: this.questionTitle, questionType: this.questionType,options:this.listOption})
+                store.commit('setQuestion', {
+                    "id": this.idQuestion,
+                    questionTitle: this.questionTitle,
+                    questionType: this.questionType,
+                    options: this.listOption
+                })
                 console.log("id" + this.idQuestion)
                 this.idQuestion++;
-                this.listOption=[];
+                this.listOption = [];
                 this.isModalVisible = false;
 
 
             },
             exitModal() {
-                this.isModalVisible= false
+                this.isModalVisible = false
 
             },
+
             forceRerender() {
-                if (this.numberOptions!=this.numberOptionsRender){
-                    if (this.numberOptions>this.numberOptionsRender)
+                if (this.numberOptions != this.numberOptionsRender) {
+                    if (this.numberOptions > this.numberOptionsRender)
                         this.numberOptionsRender++;
                     else
                         this.numberOptionsRender--;
                     this.$forceUpdate();
                 }
             },
-            async saveTest(){
-                console.log("salvando test" +this.questionJson.length);
+            async saveTest() {
+                console.log("salvando test" + this.questionJson.length);
                 for (var i = 0; i < this.questionJson.length; i++) {
-                    console.log("entro for : "+i);
+                    console.log("entro for : " + i);
                     console.log(this.questionJson[i].questionTitle);
 
                 }
                 try {
                     await this.$axios.post('/test/new', {
-                        testName: this.testName + this.idQuestion,
+                        testName: this.testName,
                         questions: this.questionJson,
                     });
-
+                    Bus.$emit('closeTest', false)
                     this.$router.push('/admin');
                 } catch (e) {
                     this.error = e.response.data.message;
                 }
 
+            },
+            exitTest(){
+                Bus.$emit('closeTest', false)
+                this.$router.push('/admin');
             }
 
         },

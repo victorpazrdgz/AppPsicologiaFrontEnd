@@ -80,7 +80,7 @@
                             store.commit('setUser',response.data)
 
                             if (response.data.role=='USER') {
-                                $nuxt.$router.push('/');
+                                $nuxt.$router.push({name: 'user' });
                             }
                               else {
                                 $nuxt.$router.push( {name: 'admin' });

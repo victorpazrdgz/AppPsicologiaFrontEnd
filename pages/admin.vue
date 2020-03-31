@@ -6,6 +6,7 @@
 <!--      <div v-if="question.question!=null"></div>-->
       <button @click="newTest">New Test</button>
       {{ user.userName }}
+
       <test v-if="isTestVisible" :is=" isTestVisible" >
       </test>
     </div>
@@ -17,6 +18,7 @@
     import Vue from 'vue';
     import { mapGetters } from 'vuex';
     import { store } from '../store/user'
+    import Bus from '~/assets/bus'
     export default {
         middleware: 'auth',
 
@@ -40,7 +42,12 @@
                 this.isTestVisible = () => import("../components/Test");
             },
 
-        }
+        },
+        created: function() {
+            Bus.$on('closeTest', (item) =>{
+               this.isTestVisible = item;
+            })
+        },
     }
 </script>
 
