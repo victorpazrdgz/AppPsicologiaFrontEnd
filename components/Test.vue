@@ -1,21 +1,21 @@
 <template>
   <section class="section">
     <div class="container">
-      <p>Hola admin </p>
-      <h2>Dynamically test Created:</h2>
 
-      <div v-show="!isTestHaveName" >
-        <h2 style="text-align: center">Create Test</h2>
+      <div v-show="!isTestHaveName">
+        <h1 style="text-align: center"><strong>Create Test</strong></h1>
 
-          <div class="field">
-            <label class="label">Test Name</label>
-            <div class="control">
-              <input type="text" placeholder="Test Name" v-model="testName" style="width: 100%"/>
-
-            </div>
-            <button  @click="newQuestion">OK</button>
-            <button  @click="exitTest">Cancel</button>
+        <div class="field">
+          <label class="label">Test Name</label>
+          <div class="control">
+            <input type="text" class="input is-rounded is-focused" placeholder="Test Name" v-model="testName"
+                   style="width: 100%"/>
           </div>
+          <div style="padding-top: 20px; align-content: center">
+            <button @click="newQuestion" class="button is-success is-rounded">OK</button>
+            <button @click="exitTest" class="button is-danger is-rounded">Cancel</button>
+          </div>
+        </div>
 
 
       </div>
@@ -25,34 +25,36 @@
         <div v-if="item.questionType === 'Text'">
           <textarea></textarea>
         </div>
-        <div v-if="item.questionType === 'Options'" v-for="item1 in item.options">
-
-          <input type="radio"> {{item1.option}}
-
+        <div class="control">
+          <label class="radio" v-if="item.questionType === 'Options'" v-for="item1 in item.options">
+            <input type="radio" :value="item1.option">{{item1.option}}
+          </label>
         </div>
       </div>
-
-      <button  v-show="isTestHaveName" @click="newQuestion">Add question</button>
-
+<div style="padding-top: 20px">
+      <button v-show="isTestHaveName" @click="newQuestion" class="button  is-info is-rounded" >Add question</button>
+</div>
       <modaltemplate v-if="isModalVisible" :is="isModalVisible" ref="my-modal" @save="saveModal" @close="exitModal">
         <h2 slot="header" style="text-align: center">Create Question</h2>
         <div slot="body">
           <div class="field">
             <label class="label">Question</label>
             <div class="control">
-              <input type="text" id="capture-title" placeholder="Question" v-model="questionTitle" style="width: 100%"/>
+              <input type="text" id="capture-title" class="input is-rounded is-focused" placeholder="Question"
+                     v-model="questionTitle" style="width: 100%"/>
             </div>
           </div>
-          <div class="field">
-            <label class="label">Type Question</label>
-            <div class="control">
-              <select class="select" v-model="questionType" placeholder=" Type Question" style="width: 100%">
-                <option class="label" disabled value="">Choose an Option</option>
-                <option class="label">Text</option>
-                <option class="label">Options</option>
-              </select>
-            </div>
+          <!--          <div class="field">-->
+          <label class="label">Type Question</label>
+          <div class="select is-rounded is-focused">
+            <select  v-model="questionType" placeholder=" Type Question"
+                    style="width: 100%">
+              <option class="label" disabled value="">Choose an Option</option>
+              <option class="label">Text</option>
+              <option class="label">Options</option>
+            </select>
           </div>
+          <!--          </div>-->
           <div class="field" v-if="this.questionType==='Options'" :key="numberOptions" @change="forceRerender">
             <label class="label">Number Options</label>
             <div class="control">
@@ -73,9 +75,9 @@
 
 
     </div>
-    <div v-if=" this.questionJson.length > 0">
-      <button @click="saveTest">Save Test</button>
-
+    <div v-if=" this.questionJson.length > 0" style="padding-top: 20px;">
+      <button @click="saveTest" class="button is-success is-rounded is-pulled-right"  >Save Test</button>
+      <button @click="exitTest" class="button is-danger is-rounded is-pulled-right"  >Exit Test</button>
     </div>
   </section>
 </template>
@@ -90,7 +92,7 @@
             isModalVisible: null,
             idQuestion: 1,
             questionTitle: null,
-            questionType: null,
+            questionType: '',
             numberOptions: 2,
             numberOptionsRender: 2,
             questionOptions: [],
@@ -167,7 +169,7 @@
                     this.$forceUpdate();
                 }
             },
-            async saveTest() {
+            saveTest() {
                 console.log("salvando test" + this.questionJson.length);
                 for (var i = 0; i < this.questionJson.length; i++) {
                     console.log("entro for : " + i);
@@ -175,18 +177,19 @@
 
                 }
                 try {
-                    await this.$axios.post('/test/new', {
+                    this.$axios.post('/test/new', {
                         testName: this.testName,
                         questions: this.questionJson,
                     });
                     Bus.$emit('closeTest', false)
                     this.$router.push('/admin');
+                    this.$forceUpdate();
                 } catch (e) {
                     this.error = e.response.data.message;
                 }
 
             },
-            exitTest(){
+            exitTest() {
                 Bus.$emit('closeTest', false)
                 this.$router.push('/admin');
             }

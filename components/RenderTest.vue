@@ -1,53 +1,70 @@
 <template>
   <section>
     <div class="container">
-      hola render test
-      {{user.userName}}
-      <div v-for='item in this.questions ' :key ="item.idQuestion">
 
-       <div > {{item.questionTitle}}</div>
-        <div v-if="item.questionType === 'Text'">
-          <textarea    v-model="responseQuestion[item.idQuestion]" ></textarea>
-        </div>
-        <div v-if="item.questionType === 'Options'" v-for="item1 in item.options">
+      <div class="columns is-centered" id="app">
+        <div class="column is-half">
+          <section class="section">
+            <h1 class="title">{{this.testName}}</h1>
+            <p class="subtitle">You must Complete all questions.</p>
+            <hr>
+              <form v-on:submit.prevent="$validator.validateAll()">
+                  <div class="field" v-for='item in this.questions ' :key="item.idQuestion">
+                    <label class="label">{{item.questionTitle}}</label>
 
-          <input type="radio"  :value="item1.option"  v-model=" selectedOption[item.idQuestion]" ><label>{{item1.option}}</label>
+                        <div class="control"  v-if="item.questionType === 'Text'">
+                          <textarea class="textarea" v-model="responseQuestion[item.idQuestion]"></textarea>
+
+                        </div>
 
 
+                    <div class="control">
+                      <label class="radio" v-if="item.questionType === 'Options'" v-for="item1 in item.options">
+                        <input type="radio" :value="item1.option" v-model=" selectedOption[item.idQuestion]">{{item1.option}}
+                      </label>
+                    </div>
+                  </div>
+
+
+                <div class="field has-text-right">
+                  <button @click="sendResult" class="button is-primary">Submit</button>
+                </div>
+              </form>
+            </section>
         </div>
       </div>
-      <button @click="sendResult">Save Test</button>
     </div>
   </section>
 </template>
 
 <script>
-    import { mapGetters } from 'vuex';
-    import { store } from '../store/user'
-    import Bus from '~/assets/bus'
+    import {mapGetters} from 'vuex';
+    import {store} from '../store/user'
+
     export default {
         middleware: 'auth',
 
         // auth:{roles:{only:{"admin":user.role}}},
         computed: {
-            ...mapGetters(['loggedInUser','user']),
-            user(){
+            ...mapGetters(['loggedInUser', 'user']),
+            user() {
                 return store.state.user;
             },
 
         },
 
         name: "RenderTest",
-        props: ['questions','testName','isRenderTest'] ,
+        props: ['questions', 'testName', 'isRenderTest'],
 
         data: () => ({
-                selectedOption:{},
-                responseQuestion:{},
-                resultJson:[],
-                listResults:[]
+            selectedOption: {},
+            responseQuestion: {},
+            resultJson: [],
+            listResults: [],
 
         }),
-        methods:{
+        methods: {
+
             async sendResult() {
                 console.log(this.testName)
                 console.log(this.questions)
@@ -81,13 +98,15 @@
                         "responses": this.listResults
                     });
 
-                   this.$emit('close-render', false)
+                    this.$emit('close-render', false)
 
                 } catch (e) {
                     this.error = e.response.data.message;
                 }
             }
-        }
+        },
+
+
     }
 </script>
 

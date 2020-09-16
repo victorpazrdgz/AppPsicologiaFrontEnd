@@ -10,7 +10,7 @@
           <form method="post" @submit.prevent="login">
 
             <div class="field">
-              <label class="label">UserName</label>
+              <label class="label">UserName or Email</label>
 
               <div class="control">
                 <input
