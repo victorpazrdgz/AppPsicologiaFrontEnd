@@ -25,7 +25,7 @@
               default footer
 
             </slot>
-            <button class="modal-default-button" @click="save">
+            <button class="button  is-rounded is-success" style="width: 100%" @click="save">
               OK
             </button>
           </div>

@@ -50,19 +50,19 @@
                 >
               </div>
             </div>
-            <div class="field">
-              <label class="label">Sex</label>
+<!--            <div class="field">-->
+<!--              <label class="label">Sex</label>-->
 
-              <div class="control">
-                <select class="select" v-model="sex">
-                  <option class="label" disabled value="">Choose an Option</option>
-                  <option class="label">Male</option>
-                  <option class="label">Female</option>
-                  <option class="label">Other</option>
-                </select>
+<!--              <div class="control">-->
+<!--                <select class="select" v-model="sex">-->
+<!--                  <option class="label" disabled value="">Choose an Option</option>-->
+<!--                  <option class="label">Male</option>-->
+<!--                  <option class="label">Female</option>-->
+<!--                  <option class="label">Other</option>-->
+<!--                </select>-->
 
-              </div>
-            </div>
+<!--              </div>-->
+<!--            </div>-->
             <div class="control">
               <button type="submit" class="button is-dark is-fullwidth">Register</button>
             </div>

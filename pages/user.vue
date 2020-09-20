@@ -1,8 +1,14 @@
 <template>
   <section class="section">
     <div class="container">
-      <h1>User Page </h1>
-
+      <div class="columns">
+        <div class="column">
+          <img class="AppLogo"  style="padding-top:2%; text-align: center"  src="~/assets/images/logo_uned.gif">
+        </div>
+        <div class="column">
+          <img class="AppLogo"  style="padding-top:2%; text-align: center"  src="~/assets/images/logo_psicologia.gif">
+        </div>
+      </div>
       <div v-for='(item,index) in this.loadedTest'>
         <a @click="renderTest(item)" href="#">{{item.testName}} </a>
       </div>

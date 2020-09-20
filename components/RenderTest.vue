@@ -19,8 +19,10 @@
 
 
                     <div class="control">
-                      <label class="radio" v-if="item.questionType === 'Options'" v-for="item1 in item.options">
+                      <label class="radio" v-if="item.questionType === 'Options'" v-for="item1 in item.options" style="width: 100%">
                         <input type="radio" :value="item1.option" v-model=" selectedOption[item.idQuestion]">{{item1.option}}
+
+
                       </label>
                     </div>
                   </div>

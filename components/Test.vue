@@ -21,13 +21,13 @@
       </div>
 
       <div v-for='(item,index) in this.questionJson'>
-        {{item.questionTitle}}
+       <p class="label"> {{item.questionTitle}}</p>
         <div v-if="item.questionType === 'Text'">
-          <textarea></textarea>
+          <textarea class="textarea has-fixed-size"></textarea>
         </div>
-        <div class="control">
+        <div class="control" style="padding-top: 2%">
           <label class="radio" v-if="item.questionType === 'Options'" v-for="item1 in item.options">
-            <input type="radio" :value="item1.option">{{item1.option}}
+            <input type="radio" class="radio" style="padding-right: 10%" :value="item1.option">{{item1.option}}
           </label>
         </div>
       </div>
@@ -35,7 +35,10 @@
       <button v-show="isTestHaveName" @click="newQuestion" class="button  is-info is-rounded" >Add question</button>
 </div>
       <modaltemplate v-if="isModalVisible" :is="isModalVisible" ref="my-modal" @save="saveModal" @close="exitModal">
-        <h2 slot="header" style="text-align: center">Create Question</h2>
+
+
+        <h2 slot="header" style="color: midnightblue; font-size:120%; text-align: center;padding-left: 2%">  <img class="AppLogo"  style="padding-top:2%; text-align: center; width: 10%;height: 10%"  src="~/assets/images/logo_uned.gif"><span style=";padding-left: 2%">  Create Question</span></h2>
+
         <div slot="body">
           <div class="field">
             <label class="label">Question</label>
@@ -57,13 +60,13 @@
           <!--          </div>-->
           <div class="field" v-if="this.questionType==='Options'" :key="numberOptions" @change="forceRerender">
             <label class="label">Number Options</label>
-            <div class="control">
-              <input type="number" v-model="numberOptions" :min="2" :max="10" inline controls/>
+            <div class="control ">
+              <input type="number" class="input is-rounded" v-model="numberOptions" :min="2" :max="10" inline controls/>
             </div>
             <label class="label">Question Options</label>
             <div class="control" v-for='(n,index) in this.numberOptionsRender'>
               {{ n }}
-              <input type="text" v-model="questionOptions[n]">
+              <input type="text" class="input is-rounded" v-model="questionOptions[n]">
             </div>
           </div>
 
@@ -180,10 +183,14 @@
                     this.$axios.post('/test/new', {
                         testName: this.testName,
                         questions: this.questionJson,
+                    }).then(response => {
+                      if (response.data=true) {
+                        Bus.$emit('closeTest', false)
+                        this.$router.push('/admin');
+                      }
                     });
-                    Bus.$emit('closeTest', false)
-                    this.$router.push('/admin');
-                    this.$forceUpdate();
+
+
                 } catch (e) {
                     this.error = e.response.data.message;
                 }
