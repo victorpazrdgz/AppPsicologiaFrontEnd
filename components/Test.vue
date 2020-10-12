@@ -115,6 +115,11 @@
             async newQuestion() {
                 console.log("json" + this.questionJson.length)
                 this.isTestHaveName = true;
+                this.questionType = '';
+                this.numberOptions = 2;
+                this.numberOptionsRender = 2;
+                this.listOption = [];
+                this.questionTitle = null;
                 this.isModalVisible = () => import("../components/ModalForm");
             },
             saveModal() {

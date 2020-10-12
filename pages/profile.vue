@@ -1,7 +1,7 @@
 <template>
   <section class="section">
     <div class="container">
-      <h2 class="title">My Profile</h2>
+      <h1 style="padding-top:1%;color: darkgreen; font-size: xx-large;text-align: center">{{ 'My Profile' }}</h1>
 
       <div class="content">
         <p>
@@ -13,6 +13,7 @@
           {{ user.email }}
         </p>
       </div>
+      <button @click="exit()" class="button is-warning is-rounded">Exit</button>
     </div>
   </section>
 </template>
@@ -30,5 +31,14 @@
            },
 
         },
+      methods:{
+          exit(){
+            if (this.user.role == "USER")
+              this.$router.push('/user')
+            if (this.user.role == "ADMIN")
+              this.$router.push('/admin')
+
+          }
+      }
     };
 </script>

@@ -11,8 +11,11 @@
       </div>
       <div class="tabs">
         <ul>
+
           <li v-bind:class="{ 'is-active': isActive == 'createTest' }"><a
             @click="isActive =createTest(); 'createTest'">{{ 'Create Test' }}</a></li>
+          <li v-bind:class="{ 'is-active': isActive == 'createStudio' }"><a
+            @click="createStudio();isActive = 'createStudio'">{{ 'Create Studio' }}</a></li>
           <li v-bind:class="{ 'is-active': isActive == 'dataInfo' }"><a
             @click="dataInfo(); isActive = 'dataInfo'">{{ 'Data Information' }}</a></li>
           <li v-bind:class="{ 'is-active': isActive == 'users' }"><a
@@ -61,6 +64,7 @@
       </div>  <!--      {{ this.loadedTest}}-->
      <data-information v-if="isDataInfo" :is="isDataInfo"></data-information>
       <users-module v-if="isUserModule" :is="isUserModule"></users-module>
+      <studio-module v-if="isCreateStudio" :is="isCreateStudio"></studio-module>
       </div>
   </section>
 </template>
@@ -74,6 +78,7 @@ import Bus from '~/assets/bus'
 import EditTest from "../components/EditTest";
 import DataInformation from "@/components/DataInformation";
 import UsersModule from "@/components/UsersModule";
+import StudioModule from "@/components/StudioModule";
 
 export default {
   middleware: 'auth',
@@ -88,11 +93,12 @@ export default {
   },
 
   name: "admin",
-  components: {UsersModule, DataInformation, Test, EditTest},
+  components: {StudioModule, UsersModule, DataInformation, Test, EditTest},
   data: () => ({
     isActive: 'createTest',
     isCreateTest:true,
     isDataInfo:false,
+    isCreateStudio:false,
     isTestVisible: null,
     isUserModule:false,
     loadedTest: [],
@@ -100,6 +106,7 @@ export default {
     testname: null,
     test: null,
     questions: [],
+
   }),
 
   mounted: function () {
@@ -155,18 +162,28 @@ export default {
       this.isCreateTest = true;
       this.isDataInfo = false;
       this.isUserModule = false;
+      this.isCreateStudio = false;
     },
     dataInfo(){
       this.isCreateTest = false;
       this.isDataInfo = true;
       this.isUserModule = false;
+      this.isCreateStudio = false;
       this.isDataInfo = () => import("../components/DataInformation");
     },
     userModule(){
       this.isCreateTest = false;
       this.isDataInfo = false;
       this.isUserModule = true;
+      this.isCreateStudio = false;
       this.isUserModule = () => import("../components/UsersModule");
+    },
+    createStudio(){
+      this.isCreateTest = false;
+      this.isDataInfo = false;
+      this.isUserModule = false;
+      this.isCreateStudio = true;
+      this.isCreateStudio = () => import("../components/StudioModule");
     }
   },
 

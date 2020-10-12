@@ -56,7 +56,7 @@
         },
 
         name: "RenderTest",
-        props: ['questions', 'testName', 'isRenderTest'],
+        props: ['questions', 'testName', 'isRenderTest','studio'],
 
         data: () => ({
             selectedOption: {},
@@ -68,28 +68,35 @@
         methods: {
 
             async sendResult() {
-                console.log(this.testName)
-                console.log(this.questions)
+                // console.log(this.testName)
+                // console.log(this.questions)
 
                 for (var i = 0; i < this.questions.length; i++) {
-                    console.log("id" + this.questions[i].idQuestion)
-                    if (this.responseQuestion[i + 1] != null || this.responseQuestion[i + 1] != undefined) {
+                  //   console.log("id" + this.questions[i].idQuestion)
+                  // console.log("texto" + this.responseQuestion[i + 1])
+                  // for (var j = 0; j <this.selectedOption.length; j++) {
+                  //   console.log('option' + this.selectedOption[j])
+                  // }
+                    if ( this.questions[i].questionType=='Text') {
                         this.listResults.push({
                             "idQuestion": this.questions[i].idQuestion,
                             "response": this.responseQuestion[i + 1]
                         })
                         console.log("data text " + i + " " + this.responseQuestion[i + 1])
-                    } else {
+                    }
+                    if(this.questions[i].questionType=='Options') {
                         this.listResults.push({
-                            "idQuestion": this.questions[i].idQuestion,
-                            "response": this.selectedOption[i + 1]
+                          "idQuestion": this.questions[i].idQuestion,
+                          "response": this.selectedOption[i + 1]
                         })
                         console.log("data option" + this.selectedOption[i + 1])
                     }
+
                 }
                 this.resultJson.push({
                     "userName": this.user.userName,
                     "testName": this.testName,
+                    "studio":this.studio,
                     "responses": this.listResults
                 })
                 console.log(this.resultJson)
@@ -97,9 +104,12 @@
                     await this.$axios.post('/test/response', {
                         "userName": this.user.userName,
                         "testName": this.testName,
+                        "studio":this.studio,
+                        "didTest":new Date(),
                         "responses": this.listResults
                     });
-
+                    this.resultJson = [];
+                    this.listResults =[];
                     this.$emit('close-render', false)
 
                 } catch (e) {

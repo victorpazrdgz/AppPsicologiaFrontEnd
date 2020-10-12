@@ -20,6 +20,9 @@
             <button @click="editUser(item)" class="button  is-rounded is-success">Edit</button>
           </td>
           <td>
+            <button @click="resetPass(item) " class="button  is-rounded is-warning">Reset Password</button>
+          </td>
+          <td>
             <button @click="deleteUser(item) " class="button  is-rounded is-danger">Delete</button>
           </td>
 
@@ -68,6 +71,19 @@
             </div>
 
           </div>
+          <div class="columns" style="padding-top: 2%">
+
+            <div class="column">
+              <div class="field">
+                <label class="label">Assigned Studios</label>
+                <div class="control "  v-for="studio in this.loadedStudios" style="width: 100%" >
+                  <input type="checkbox" v-if="studio.isSelected == false"  v-model="studio.isSelected"/>
+                  <input type="checkbox" v-if="studio.isSelected == true" checked v-model="studio.isSelected"/>
+                  {{ studio.studioName }}
+                </div>
+              </div>
+            </div>
+          </div>
         </form>
       </div>
       <div slot="footer"></div>
@@ -85,10 +101,13 @@ export default {
     email: '',
     rol: '',
     password:'',
-    isFormUser:false
+    isFormUser:false,
+    loadedStudios: [],
+    studios:[]
   }),
   mounted: function () {
     this.callUsers()
+    this.callStudios()
   },
   methods: {
     async callUsers() {
@@ -102,8 +121,37 @@ export default {
       this.email = item.email;
       this.rol = item.role;
       this.password = item.password;
+
+      for (var i = 0; i < this.loadedStudios.length; i++) {
+        // this.isSelected=false
+        this.loadedStudios[i]['isSelected'] = false;
+      }
+
+      for (var i = 0; i < this.loadedStudios.length; i++) {
+        for (var j = 0; j < item.assignedStudios.length; j++)
+          if (this.loadedStudios[i].studioName == item. assignedStudios[j].studioName) {
+            this.loadedStudios[i].isSelected=true
+
+
+          }
+      }
+
       this.isFormUser = true;
       this.isFormUser =  () => import("../components/ModalForm");
+    },
+    resetPass(item){
+      try {
+        this.$axios.get('/resetPassword', {
+          params: {
+            userName: item.userName
+          }
+        }).then(response => {
+          if (response.data == true)
+            this.callUsers();
+        });
+      } catch (e) {
+        this.error = e.response.data.message;
+      }
     },
     deleteUser(item) {
       console.log("id delete" + item.id)
@@ -121,23 +169,35 @@ export default {
       }
     },
     saveModal(){
+      for (var i = 0; i < this.loadedStudios.length; i++) {
+        if (this.loadedStudios[i].isSelected == true)
+          this.studios.push(this.loadedStudios[i])
+      }
       this.$axios.put('/user/update', {
         id:this.id,
         userName:this.userName,
         email:this.email,
         role:this.rol,
         password:this.password,
+        assignedStudios:this.studios,
       }).then(response =>{
         if (response.data!=null){
           this.isFormUser = false;
           this.callUsers();
+          this.callStudios();
         }
       })
 
     },
     exitModal(){
       this.isFormUser = false;
-    }
+    },
+    async callStudios() {
+      this.$axios.get("/studios").then(response => {
+        this.loadedStudios = response.data;
+      })
+    },
+
   }
 
 }

@@ -2,6 +2,14 @@
   <section class="section">
     <div class="container">
       <div class="columns">
+        <div class="column">
+          <img class="AppLogo" style="padding-top:2%; text-align: center" src="~/assets/images/logo_uned.gif">
+        </div>
+        <div class="column">
+          <img class="AppLogo" style="padding-top:2%; text-align: center" src="~/assets/images/logo_psicologia.gif">
+        </div>
+      </div>
+      <div class="columns">
         <div class="column is-4 is-offset-4">
           <h5 class="title has-text-centered">App Access</h5>
 
@@ -77,14 +85,18 @@
                     }).then(() => {
                         this.$axios.post('/user', {userName: this.userName}).then(function (response) {
 
-                            store.commit('setUser',response.data)
-
-                            if (response.data.role=='USER') {
-                                $nuxt.$router.push({name: 'user' });
+                          store.commit('setUser',response.data)
+                          console.log(response.data.lastLogin)
+                          if (response.data.lastLogin == null){
+                            $nuxt.$router.push({path: ('ChangePassword')});
+                          }
+                          else {
+                            if (response.data.role == 'USER') {
+                              $nuxt.$router.push({name: 'user'});
+                            } else {
+                              $nuxt.$router.push({name: 'admin'});
                             }
-                              else {
-                                $nuxt.$router.push( {name: 'admin' });
-                            }
+                          }
                         });
                     })
                 } catch (e) {
